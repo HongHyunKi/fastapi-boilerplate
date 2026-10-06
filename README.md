@@ -13,7 +13,7 @@ docker compose up --build        # api: http://localhost:8000, db: Postgres 16
 
 - 앱이 시작될 때 `alembic upgrade head`를 실행하고 샘플 데이터를 시드합니다.
 - 문서: http://localhost:8000/docs · 헬스체크: `GET /health` · API: `/api/v1/items`
-- 호스트의 5432 포트가 이미 쓰이고 있으면 `POSTGRES_PORT=55432 docker compose up --build`로 실행합니다.
+- Postgres 호스트 포트는 `.env`의 `POSTGRES_PORT`로 바꿉니다. compose와 `DATABASE_URL`이 같은 값을 씁니다.
 - 컨테이너 안에서 테스트: `docker compose run --rm api pytest`
 
 ## 로컬 실행 (DB만 Docker)
@@ -22,12 +22,11 @@ docker compose up --build        # api: http://localhost:8000, db: Postgres 16
 cd backend
 python3.12 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env              # DATABASE_URL=...@localhost:5432/app
+cp .env.example .env
 docker compose up -d db
 uvicorn app.main:app --reload
 ```
 
-`POSTGRES_PORT`를 바꿨다면 `.env`의 `DATABASE_URL` 포트도 같이 바꿔 주세요.
 DB 없이 가볍게 돌리려면 `.env`에서 `DATABASE_URL=sqlite:///./app.db`로 바꾸면 됩니다.
 
 ## 테스트

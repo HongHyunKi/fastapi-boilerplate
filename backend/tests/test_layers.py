@@ -58,7 +58,7 @@ RULES = [
     (
         "app.repositories",
         lambda m: _under(m, "app.services") or _under(m, "app.api"),
-        "repositories는 조회·저장만 합니다. 판단 로직은 services로 올리세요.",
+        "repositories는 조회와 저장만 합니다. 판단 로직은 services로 올리세요.",
     ),
     (
         "app.services",

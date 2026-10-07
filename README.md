@@ -1,7 +1,23 @@
 # fastapi-boilerplate
 
 여러 프로젝트에서 쓸 수 있는 FastAPI 보일러플레이트입니다.
-Python 3.12 · FastAPI · Pydantic v2 · SQLAlchemy 2 · Alembic · pytest
+
+## 기술 스택
+
+| 구분 | 사용 기술 |
+|---|---|
+| 언어 | Python 3.12 |
+| 웹 프레임워크 | FastAPI |
+| ASGI 서버 | Uvicorn |
+| 데이터 검증 | Pydantic v2 |
+| 설정 관리 | pydantic-settings |
+| DB | PostgreSQL 16 (드라이버: psycopg 3) |
+| ORM | SQLAlchemy 2 |
+| DB 마이그레이션 | Alembic |
+| 테스트 | pytest |
+| 린트, 포맷 | ruff |
+| 실행 환경 | Docker, Docker Compose |
+| CI | GitHub Actions |
 
 ## 실행 (Docker, 기본)
 
@@ -12,7 +28,9 @@ docker compose up --build        # api: http://localhost:8000, db: Postgres 16
 ```
 
 - 앱이 시작될 때 `alembic upgrade head`를 실행하고 샘플 데이터를 시드합니다.
-- 문서: http://localhost:8000/docs · 헬스체크: `GET /health` · API: `/api/v1/items`
+- API 문서: http://localhost:8000/docs
+- 헬스체크: `GET /health`
+- API: `/api/v1/items`
 - Postgres 호스트 포트는 `.env`의 `POSTGRES_PORT`로 바꿉니다. compose와 `DATABASE_URL`이 같은 값을 씁니다.
 - 컨테이너 안에서 테스트: `docker compose run --rm api pytest`
 
@@ -39,7 +57,7 @@ TEST_DATABASE_URL=postgresql+psycopg://app:app@localhost:5432/app pytest   # Pos
 
 `TEST_DATABASE_URL`을 지정하면 테스트마다 테이블을 만들고 지우므로 반드시 테스트 전용 DB를 쓰세요.
 
-## 린트·포맷 (ruff)
+## 린트와 포맷 (ruff)
 
 ```bash
 cd backend
@@ -72,7 +90,7 @@ backend/app/
 ├── api/v1/        라우터만 둡니다. deps.py에 Annotated Depends 별칭(SettingsDep, DbDep, LoggerDep, ...)
 ├── schemas/       요청/응답 모델. common.py: ErrorResponse {code, message, detail}
 ├── services/      비즈니스 로직과 트랜잭션 경계(commit)
-├── repositories/  DB 조회·저장만 합니다(판단 로직 없음)
+├── repositories/  DB 조회와 저장만 합니다(판단 로직 없음)
 ├── models/        SQLAlchemy ORM. 새 모델은 __init__.py에 등록합니다
 ├── db/            session, init_db(alembic upgrade), seed, migrations/
 ├── integrations/  ports.py(Protocol + 결과 dataclass), 어댑터, factory.py(mock/live 분기)

@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Query, status
 
 from app.api.v1.deps import ItemServiceDep, LoggerDep
@@ -9,8 +11,8 @@ router = APIRouter(prefix="/items", tags=["items"])
 @router.get("", response_model=list[ItemRead])
 def list_items(
     service: ItemServiceDep,
-    offset: int = Query(0, ge=0),
-    limit: int = Query(20, ge=1, le=100),
+    offset: Annotated[int, Query(ge=0)] = 0,
+    limit: Annotated[int, Query(ge=1, le=100)] = 20,
 ):
     return service.list(offset, limit)
 

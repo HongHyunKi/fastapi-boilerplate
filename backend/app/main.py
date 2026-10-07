@@ -17,9 +17,11 @@ from app.schemas.common import ErrorResponse
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    setup_logging(get_settings().log_level)
+    settings = get_settings()
+    setup_logging(settings.log_level)
     init_db()
-    seed()
+    if not settings.is_live:
+        seed()
     yield
 
 
@@ -45,7 +47,7 @@ def create_app() -> FastAPI:
 
     @app.exception_handler(RequestValidationError)
     async def validation_error_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
-        # 'input'/'ctx'에는 사용자가 보낸 원본 값(비밀번호 등)이 들어 있으므로 위치·사유만 남깁니다.
+        # 'input'/'ctx'에는 사용자가 보낸 원본 값(비밀번호 등)이 들어 있으므로 위치와 사유만 남깁니다.
         errors = [{"loc": list(e["loc"]), "msg": e["msg"], "type": e["type"]} for e in exc.errors()]
         _logger(request).info("validation failed: %s", [(e["loc"], e["type"]) for e in errors])
         body = ErrorResponse(code="validation_failed", message="Invalid request", detail=errors)

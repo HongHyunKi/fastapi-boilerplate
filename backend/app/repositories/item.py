@@ -7,7 +7,7 @@ from app.models import Item
 
 
 class ItemRepository:
-    """조회·저장만 합니다. 존재 여부 판단, commit은 서비스 몫입니다."""
+    """조회와 저장만 합니다. 존재 여부 판단, commit은 서비스 몫입니다."""
 
     def __init__(self, db: Session) -> None:
         self.db = db

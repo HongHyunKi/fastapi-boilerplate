@@ -6,8 +6,8 @@ def test_item_crud(client):
     assert client.get(f"/api/v1/items/{item_id}").json()["name"] == "pen"
     assert [i["id"] for i in client.get("/api/v1/items").json()] == [item_id]
 
-    res = client.patch(f"/api/v1/items/{item_id}", json={"name": "pencil"})
-    assert res.json() == {**res.json(), "name": "pencil", "description": "blue"}
+    body = client.patch(f"/api/v1/items/{item_id}", json={"name": "pencil"}).json()
+    assert (body["name"], body["description"]) == ("pencil", "blue")
 
     assert client.delete(f"/api/v1/items/{item_id}").status_code == 204
     res = client.get(f"/api/v1/items/{item_id}")

@@ -14,11 +14,13 @@ def get_logger(request: Request) -> logging.LoggerAdapter:
     return get_request_logger(getattr(request.state, "request_id", "-"))
 
 
-def get_item_service(db: Annotated[Session, Depends(get_db)]) -> ItemService:
-    return ItemService(db)
-
-
 SettingsDep = Annotated[Settings, Depends(get_settings)]
 DbDep = Annotated[Session, Depends(get_db)]
 LoggerDep = Annotated[logging.LoggerAdapter, Depends(get_logger)]
+
+
+def get_item_service(db: DbDep) -> ItemService:
+    return ItemService(db)
+
+
 ItemServiceDep = Annotated[ItemService, Depends(get_item_service)]
